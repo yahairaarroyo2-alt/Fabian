@@ -1,0 +1,341 @@
+/* ─── Reset & Base ─────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #0f0f1a;
+  color: #e0e0f0;
+  min-height: 100vh;
+}
+
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+
+/* ─── App Shell ─────────────────────────────────────────────── */
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ─── Header ────────────────────────────────────────────────── */
+.app-header {
+  padding: 24px 20px 16px;
+  text-align: center;
+}
+
+.app-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, #FF6B6B, #A29BFE);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.app-subtitle {
+  font-size: 0.85rem;
+  color: #888;
+  margin-top: 4px;
+}
+
+/* ─── Day Tabs ──────────────────────────────────────────────── */
+.day-tabs {
+  display: flex;
+  border-bottom: 2px solid #1e1e2e;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.day-tabs::-webkit-scrollbar { display: none; }
+
+.day-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 10px 8px;
+  border-bottom: 3px solid transparent;
+  color: #555;
+  transition: color 0.2s, border-color 0.2s;
+  min-width: 80px;
+}
+.day-tab.active { font-weight: 700; }
+
+.tab-day { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; }
+.tab-label { font-size: 0.78rem; }
+
+/* ─── Main ──────────────────────────────────────────────────── */
+.app-main { flex: 1; padding: 0 0 40px; }
+
+/* ─── Workout Day ───────────────────────────────────────────── */
+.workout-day { display: flex; flex-direction: column; gap: 0; }
+
+/* ─── Day Header ────────────────────────────────────────────── */
+.day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  color: white;
+}
+
+.day-tag {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.85;
+}
+
+.day-label {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 2px 0 4px;
+}
+
+.day-focus {
+  font-size: 0.8rem;
+  opacity: 0.85;
+}
+
+.day-progress-ring {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.ring-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* ─── Exercise List ─────────────────────────────────────────── */
+.exercise-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: #1a1a2e;
+}
+
+/* ─── Exercise Card ─────────────────────────────────────────── */
+.exercise-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #14142a;
+  cursor: pointer;
+  transition: background 0.15s;
+  user-select: none;
+}
+.exercise-card:active { background: #1c1c35; }
+.exercise-card.done { opacity: 0.5; }
+.exercise-card.done .exercise-name { text-decoration: line-through; }
+
+.exercise-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.exercise-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #e0e0f0;
+}
+
+.exercise-meta {
+  font-size: 0.8rem;
+  color: #a0a0c0;
+}
+
+.exercise-equipment {
+  font-size: 0.72rem;
+  color: #606080;
+}
+
+.exercise-check {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+  transition: background 0.2s, border-color 0.2s;
+}
+.exercise-check.checked {
+  background: #4ECDC4;
+  border-color: #4ECDC4;
+}
+
+/* ─── Day Actions ───────────────────────────────────────────── */
+.day-actions {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  background: #0f0f1a;
+}
+
+.action-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+.action-btn:active { opacity: 0.7; }
+
+.timer-trigger {
+  background: #1e1e3a;
+  color: #a29bfe;
+  border: 1px solid #2a2a4a;
+}
+
+.reset {
+  background: #1e1e3a;
+  color: #888;
+  border: 1px solid #2a2a4a;
+}
+
+/* ─── Completed Banner ──────────────────────────────────────── */
+.completed-banner {
+  margin: 0 20px 8px;
+  padding: 14px;
+  border-radius: 12px;
+  text-align: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: white;
+  animation: pop 0.3s ease;
+}
+
+@keyframes pop {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+/* ─── Timer Overlay ─────────────────────────────────────────── */
+.timer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.timer-card {
+  background: #14142a;
+  border-radius: 20px 20px 0 0;
+  padding: 28px 24px 36px;
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.timer-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #e0e0f0;
+}
+
+.timer-presets {
+  display: flex;
+  gap: 10px;
+}
+
+.preset-btn {
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: #1e1e3a;
+  color: #888;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border: 1px solid #2a2a4a;
+  transition: all 0.2s;
+}
+.preset-btn.active {
+  background: #2a2a5a;
+  color: #a29bfe;
+  border-color: #a29bfe;
+}
+
+.timer-circle-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+}
+
+.timer-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #e0e0f0;
+}
+
+.timer-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+.timer-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: opacity 0.2s;
+}
+.timer-btn:active { opacity: 0.7; }
+
+.timer-btn.primary {
+  background: #a29bfe;
+  color: #0f0f1a;
+}
+.timer-btn.secondary {
+  background: #1e1e3a;
+  color: #888;
+  border: 1px solid #2a2a4a;
+}
+
+.timer-close {
+  color: #555;
+  font-size: 0.85rem;
+  padding: 4px;
+}
