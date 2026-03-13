@@ -11,7 +11,6 @@ export default function ExerciseCard({ exercise, checked, onToggle, accentColor 
   return (
     <div
       className={`exercise-card ${checked ? "done" : ""}`}
-      style={{ borderLeft: `4px solid ${accentColor}` }}
       onClick={onToggle}
     >
       <div className="exercise-info">
@@ -38,7 +37,10 @@ export default function ExerciseCard({ exercise, checked, onToggle, accentColor 
           />
         )}
       </div>
-      <div className={`exercise-check ${checked ? "checked" : ""}`}>
+      <div
+        className={`exercise-check ${checked ? "checked" : ""}`}
+        style={checked ? { background: accentColor, borderColor: accentColor } : { borderColor: accentColor + "66" }}
+      >
         {checked ? "✓" : ""}
       </div>
     </div>

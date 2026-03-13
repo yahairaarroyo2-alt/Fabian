@@ -129,38 +129,40 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ─── Exercise Card ─────────────────────────────────────────── */
 .exercise-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  padding: 14px 20px;
+  padding: 18px 20px;
   background: #14142a;
   cursor: pointer;
   transition: background 0.15s;
   user-select: none;
+  border-bottom: 1px solid #1a1a2e;
 }
 .exercise-card:active { background: #1c1c35; }
-.exercise-card.done { opacity: 0.5; }
+.exercise-card.done { opacity: 0.45; }
 .exercise-card.done .exercise-name { text-decoration: line-through; }
 
 .exercise-info {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 4px;
+  flex: 1;
 }
 
 .exercise-name {
-  font-size: 0.95rem;
-  font-weight: 600;
+  font-size: 1rem;
+  font-weight: 700;
   color: #e0e0f0;
 }
 
 .exercise-meta {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: #a0a0c0;
 }
 
 .exercise-equipment {
   font-size: 0.72rem;
-  color: #606080;
+  color: #555575;
 }
 
 .exercise-img-btn {
@@ -168,17 +170,17 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-weight: 600;
   background: none;
   border: none;
-  padding: 4px 0 0;
+  padding: 6px 0 0;
   cursor: pointer;
   text-align: left;
 }
 
 .exercise-gif {
   width: 100%;
-  max-width: 280px;
-  border-radius: 10px;
-  margin-top: 8px;
+  border-radius: 12px;
+  margin-top: 12px;
   display: block;
+  object-fit: cover;
 }
 
 .exercise-check {
