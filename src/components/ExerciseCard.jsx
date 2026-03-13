@@ -1,7 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function ExerciseCard({ exercise, checked, onToggle, accentColor }) {
   const [showImage, setShowImage] = useState(false);
+  const [frame, setFrame] = useState(0);
+  const intervalRef = useRef(null);
+
+  useEffect(() => {
+    if (showImage && exercise.image) {
+      intervalRef.current = setInterval(() => {
+        setFrame((f) => (f === 0 ? 1 : 0));
+      }, 900);
+    } else {
+      clearInterval(intervalRef.current);
+      setFrame(0);
+    }
+    return () => clearInterval(intervalRef.current);
+  }, [showImage, exercise.image]);
 
   function handleImageToggle(e) {
     e.stopPropagation();
@@ -29,12 +43,13 @@ export default function ExerciseCard({ exercise, checked, onToggle, accentColor 
           </button>
         )}
         {showImage && exercise.image && (
-          <img
-            src={exercise.image}
-            alt={exercise.name}
-            className="exercise-gif"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <div className="exercise-gif-wrap" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={exercise.image.replace("/0.jpg", `/${frame}.jpg`)}
+              alt={exercise.name}
+              className="exercise-gif"
+            />
+          </div>
         )}
       </div>
       <div

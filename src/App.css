@@ -175,12 +175,18 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   text-align: left;
 }
 
+.exercise-gif-wrap {
+  width: 100%;
+  margin-top: 12px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
 .exercise-gif {
   width: 100%;
-  border-radius: 12px;
-  margin-top: 12px;
   display: block;
   object-fit: cover;
+  transition: opacity 0.3s ease;
 }
 
 .exercise-check {
