@@ -2,24 +2,67 @@ import { useState, useEffect, useRef } from "react";
 
 const PRESETS = [30, 60, 90, 120];
 
-export default function RestTimer({ onClose }) {
+function playBeep() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const times = [0, 0.22, 0.44];
+    times.forEach((offset) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      osc.type = "sine";
+      gain.gain.setValueAtTime(0.5, ctx.currentTime + offset);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.18);
+      osc.start(ctx.currentTime + offset);
+      osc.stop(ctx.currentTime + offset + 0.18);
+    });
+  } catch (_) {}
+}
+
+function notifyDone() {
+  playBeep();
+  if ("Notification" in window && Notification.permission === "granted") {
+    new Notification("FBA Fit — Descanso terminado", {
+      body: "¡A por la siguiente serie, Fabian!",
+      icon: "/Fabian/favicon.svg",
+      silent: false,
+    });
+  }
+}
+
+export default function RestTimer({ onClose, autoStart = false }) {
   const [duration, setDuration] = useState(60);
   const [timeLeft, setTimeLeft] = useState(60);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef(null);
+  const endTimeRef = useRef(null);
+
+  // Request notification permission and optionally auto-start
+  useEffect(() => {
+    if ("Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+    if (autoStart) {
+      endTimeRef.current = Date.now() + 60 * 1000;
+      setRunning(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (running) {
       intervalRef.current = setInterval(() => {
-        setTimeLeft((t) => {
-          if (t <= 1) {
-            clearInterval(intervalRef.current);
-            setRunning(false);
-            return 0;
-          }
-          return t - 1;
-        });
-      }, 1000);
+        const remaining = Math.round((endTimeRef.current - Date.now()) / 1000);
+        if (remaining <= 0) {
+          clearInterval(intervalRef.current);
+          setTimeLeft(0);
+          setRunning(false);
+          notifyDone();
+        } else {
+          setTimeLeft(remaining);
+        }
+      }, 500);
     } else {
       clearInterval(intervalRef.current);
     }
@@ -30,13 +73,18 @@ export default function RestTimer({ onClose }) {
     setDuration(secs);
     setTimeLeft(secs);
     setRunning(false);
+    endTimeRef.current = null;
   }
 
   function toggle() {
     if (timeLeft === 0) {
+      endTimeRef.current = Date.now() + duration * 1000;
       setTimeLeft(duration);
       setRunning(true);
     } else {
+      if (!running) {
+        endTimeRef.current = Date.now() + timeLeft * 1000;
+      }
       setRunning((r) => !r);
     }
   }

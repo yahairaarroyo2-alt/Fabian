@@ -5,11 +5,15 @@ import RestTimer from "./RestTimer";
 export default function WorkoutDay({ workout }) {
   const [checked, setChecked] = useState({});
   const [showTimer, setShowTimer] = useState(false);
+  const [timerAutoStart, setTimerAutoStart] = useState(false);
 
   function toggle(id) {
     setChecked((prev) => {
       const wasChecked = prev[id];
-      if (!wasChecked) setShowTimer(true);
+      if (!wasChecked) {
+        setTimerAutoStart(true);
+        setShowTimer(true);
+      }
       return { ...prev, [id]: !wasChecked };
     });
   }
@@ -66,7 +70,7 @@ export default function WorkoutDay({ workout }) {
 
       {/* Actions */}
       <div className="day-actions">
-        <button className="action-btn timer-trigger" onClick={() => setShowTimer(true)}>
+        <button className="action-btn timer-trigger" onClick={() => { setTimerAutoStart(false); setShowTimer(true); }}>
           ⏱ Descanso
         </button>
         <button className="action-btn reset" onClick={resetAll}>
@@ -80,7 +84,12 @@ export default function WorkoutDay({ workout }) {
         </div>
       )}
 
-      {showTimer && <RestTimer onClose={() => setShowTimer(false)} />}
+      {showTimer && (
+        <RestTimer
+          onClose={() => { setShowTimer(false); setTimerAutoStart(false); }}
+          autoStart={timerAutoStart}
+        />
+      )}
     </div>
   );
 }
