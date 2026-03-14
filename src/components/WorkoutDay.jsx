@@ -80,7 +80,7 @@ export default function WorkoutDay({ workout }) {
 
       {allDone && (
         <div className="completed-banner" style={{ background: workout.color }}>
-          🎉 ¡Día completado, Fabian!
+          🎉 ¡Día completado, Fabian! 💪
         </div>
       )}
 
