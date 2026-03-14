@@ -7,7 +7,11 @@ export default function WorkoutDay({ workout }) {
   const [showTimer, setShowTimer] = useState(false);
 
   function toggle(id) {
-    setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
+    setChecked((prev) => {
+      const wasChecked = prev[id];
+      if (!wasChecked) setShowTimer(true);
+      return { ...prev, [id]: !wasChecked };
+    });
   }
 
   function resetAll() {
