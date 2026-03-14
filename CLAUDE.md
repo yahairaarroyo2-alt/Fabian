@@ -1,214 +1,155 @@
-# CLAUDE.md — AI Assistant Guide for FBA
+# CLAUDE.md — AI Assistant Guide for FBA Fit
 
 This file provides context and conventions for AI assistants (Claude and others) working in this repository.
-
-> **Note:** This repository is currently in its initial state with no committed source code. Update this file as the project evolves to keep it accurate.
 
 ---
 
 ## Repository Overview
 
-- **Repo name:** FBA
-- **Remote:** `yahairaarroyo2-alt/FBA`
-- **Current state:** Newly initialized — no source files committed yet
-- **Primary branch:** `main` (expected; establish on first push)
+- **Repo name:** Fabian (FBA Fit)
+- - **Remote:** yahairaarroyo2-alt/Fabian
+  - - **Current state:** Active project with full React + Vite source code
+    - - **Primary branch:** `main`
+      - - **Deploy:** GitHub Pages (auto-deploy via GitHub Actions on push to `main`)
+        - - **Live URL:** https://yahairaarroyo2-alt.github.io/Fabian/
+         
+          - ---
 
----
+          ## Technology Stack
 
-## Development Branch Convention
+          | Layer | Technology |
+          |-------|-----------|
+          | Language | JavaScript (JSX) |
+          | Framework | React 19 |
+          | Build tool | Vite |
+          | Styles | CSS (plain, no frameworks) |
+          | CI/CD | GitHub Actions |
+          | Package manager | npm |
 
-Branch names follow this pattern:
+          ---
 
-```
-claude/<short-task-description>-<session-id>
-```
+          ## Project Structure
 
-Examples:
-- `claude/add-claude-documentation-H9YWk`
-- `claude/fix-auth-bug-X3Kpq`
+          ```
+          Fabian/
+          ├── .github/
+          │   └── workflows/           # GitHub Actions — deploys to GitHub Pages
+          ├── docs/
+          │   └── workout-standalone.html  # Standalone HTML version (no React dependency)
+          ├── public/
+          │   └── favicon.svg          # App favicon (referenced in index.html)
+          ├── src/
+          │   ├── assets/              # Static images used in the app
+          │   │   └── hero.png
+          │   ├── components/          # React UI components
+          │   │   ├── ExerciseCard.jsx # Individual exercise with 2-frame animation
+          │   │   ├── RestTimer.jsx    # Auto-start rest timer between sets
+          │   │   └── WorkoutDay.jsx   # Full day workout layout
+          │   ├── data/
+          │   │   └── workouts.js      # 4-day Upper/Lower workout data
+          │   ├── App.jsx              # Root component with day tab navigation
+          │   ├── App.css              # Component styles
+          │   ├── index.css            # Global styles
+          │   └── main.jsx             # React entry point
+          ├── index.html               # Vite entry point (do not move)
+          ├── package.json
+          ├── vite.config.js
+          ├── eslint.config.js
+          ├── CLAUDE.md                # This file
+          └── README.md
+          ```
 
-Rules:
-- Always develop on the designated feature branch
-- Never push directly to `main` without explicit permission
-- Branch names must start with `claude/` for automated workflows
+          ---
 
----
+          ## Development Branch Convention
 
-## Git Workflow
+          Branch names follow this pattern: `claude/<short-task-description>-<session-id>`
 
-### Creating and switching to a branch
-```bash
-git checkout -b claude/<task>-<id>
-```
+          Examples:
+          - `claude/add-claude-documentation-H9YWk`
+          - - `claude/fix-auth-bug-X3Kpq`
+           
+            - Rules:
+            - - Always develop on the designated feature branch
+              - - Never push directly to `main` without explicit permission
+                - - Branch names must start with `claude/` for automated workflows
+                 
+                  - ---
 
-### Committing work
-Write clear, descriptive commit messages in imperative mood:
-```
-Add initial project structure
-Fix null pointer in order processor
-Refactor payment service to use dependency injection
-```
+                  ## Git Workflow
 
-### Pushing a branch
-```bash
-git push -u origin <branch-name>
-```
+                  ### Creating and switching to a branch
+                  ```bash
+                  git checkout -b claude/<task>-<id>
+                  ```
 
-Retry on network failure with exponential backoff: 2s → 4s → 8s → 16s (max 4 retries).
+                  ### Committing work
+                  Write clear, descriptive commit messages in imperative mood:
+                  - `Add initial project structure`
+                  - - `Fix null pointer in order processor`
+                    - - `Refactor payment service to use dependency injection`
+                     
+                      - ### Pushing a branch
+                      - ```bash
+                        git push -u origin <branch-name>
+                        ```
 
-### Pull requests
-Open a PR from your feature branch into `main`. Include:
-- A clear title (under 70 characters)
-- Summary of what changed and why
-- Test plan with verification steps
+                        Retry on network failure with exponential backoff: 2s → 4s → 8s → 16s (max 4 retries).
 
----
+                        ---
 
-## Project Structure (to be populated)
+                        ## Development Setup
 
-Once source files are committed, document the layout here. Example template:
+                        ```bash
+                        # 1. Clone the repository
+                        git clone https://github.com/yahairaarroyo2-alt/Fabian.git
+                        cd Fabian
 
-```
-FBA/
-├── src/                  # Application source code
-│   ├── components/       # UI or service components
-│   ├── services/         # Business logic / integrations
-│   └── utils/            # Shared helpers and utilities
-├── tests/                # Automated test suites
-├── docs/                 # Additional documentation
-├── .github/              # CI/CD workflows (GitHub Actions)
-├── .env.example          # Environment variable template
-├── CLAUDE.md             # This file
-└── README.md             # Human-facing project overview
-```
+                        # 2. Install dependencies
+                        npm install
 
----
+                        # 3. Run development server
+                        npm run dev
 
-## Technology Stack (to be determined)
+                        # 4. Build for production
+                        npm run build
 
-Document the stack once the project is bootstrapped. Common items to capture:
+                        # 5. Preview production build
+                        npm run preview
+                        ```
 
-| Layer | Technology | Notes |
-|-------|-----------|-------|
-| Language | TBD | |
-| Framework | TBD | |
-| Database | TBD | |
-| Testing | TBD | |
-| CI/CD | TBD | |
-| Package manager | TBD | |
+                        ---
 
----
+                        ## Working With This Repository as an AI Assistant
 
-## Development Setup (to be documented)
+                        ### Before making changes
+                        - Read relevant source files before editing them
+                        - - Understand the existing patterns before introducing new ones
+                          - - Check for tests that cover the area you are changing
+                           
+                            - ### When implementing features
+                            - - Keep changes minimal and focused on the task
+                              - - Do not refactor unrelated code
+                                - - Do not add comments, docstrings, or type annotations to code you did not change
+                                  - - Prefer editing existing files over creating new ones
+                                    - - Do not add error handling for scenarios that cannot happen
+                                     
+                                      - ### When committing
+                                      - - Stage only files directly related to the task
+                                        - - Write commit messages in imperative mood
+                                          - - Do not commit `.env`, credentials, or secrets
+                                           
+                                            - ### When pushing
+                                            - - Use `git push -u origin <branch-name>`
+                                              - - Confirm the branch starts with `claude/` to avoid 403 errors
+                                                - - Retry on network failure with exponential backoff (max 4 retries)
+                                                 
+                                                  - ---
 
-Once established, document the setup steps here. Template:
+                                                  ## Actions requiring user confirmation before proceeding
 
-```bash
-# 1. Clone the repository
-git clone <repo-url>
-cd FBA
-
-# 2. Install dependencies
-<package-manager> install
-
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your local values
-
-# 4. Run the application
-<start-command>
-
-# 5. Run tests
-<test-command>
-```
-
----
-
-## Testing Conventions (to be established)
-
-Once a testing framework is chosen, document:
-- Test file naming patterns (e.g., `*.test.ts`, `test_*.py`)
-- Where to place tests (co-located vs. `tests/` directory)
-- How to run the full test suite
-- How to run a single test
-- Coverage requirements (if any)
-
----
-
-## Code Conventions (to be established)
-
-Once the language and linting tools are chosen, document:
-- Formatter and linter commands
-- Code style rules or config file locations
-- Import ordering conventions
-- Naming conventions (functions, classes, constants, files)
-
----
-
-## Environment Variables
-
-Document all required environment variables in `.env.example`. Never commit secrets or credentials.
-
-When adding a new env var:
-1. Add it to `.env.example` with a placeholder or description
-2. Document its purpose in this file or inline
-3. Update CI/CD secrets if needed
-
----
-
-## Key Architectural Decisions (to be documented)
-
-Record important decisions (ADRs) here or in a `docs/decisions/` directory:
-
-```
-## Decision: <title>
-**Date:** YYYY-MM-DD
-**Status:** Accepted / Superseded / Deprecated
-**Context:** Why this decision was needed
-**Decision:** What was decided
-**Consequences:** Trade-offs and implications
-```
-
----
-
-## Working With This Repository as an AI Assistant
-
-### Before making changes
-1. Read relevant source files before editing them
-2. Understand the existing patterns before introducing new ones
-3. Check for tests that cover the area you are changing
-
-### When implementing features
-- Keep changes minimal and focused on the task
-- Do not refactor unrelated code
-- Do not add comments, docstrings, or type annotations to code you did not change
-- Prefer editing existing files over creating new ones
-- Do not add error handling for scenarios that cannot happen
-
-### When committing
-- Stage only files directly related to the task
-- Write commit messages in imperative mood
-- Do not commit `.env`, credentials, or secrets
-
-### When pushing
-- Use `git push -u origin <branch-name>`
-- Confirm the branch starts with `claude/` to avoid 403 errors
-- Retry on network failure with exponential backoff (max 4 retries)
-
-### Actions requiring user confirmation before proceeding
-- Pushing to `main` or protected branches
-- Force push (`--force`)
-- Deleting branches or files
-- Any destructive or irreversible operation
-- Modifying CI/CD pipelines
-
----
-
-## Updating This File
-
-Keep CLAUDE.md current as the project evolves:
-- Update the tech stack table when frameworks are chosen
-- Fill in the project structure when directories are created
-- Document setup steps when the project can be run locally
-- Add testing and code conventions when tooling is configured
-- Record architectural decisions when significant choices are made
+                                                  - Pushing to `main` or protected branches
+                                                  - - Force push (`--force`)
+                                                    - - Deleting branches or files
+                                                      - - Any destructive or irreversible operation
+                                                        - - Modifying CI/CD pipelines
