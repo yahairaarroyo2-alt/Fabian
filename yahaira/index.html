@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rutina Personalizada</title>
+  <style>
+    :root {
+      --bg: #1a0a0f;
+      --surface: #271118;
+      --surface2: #311520;
+      --border: #4a1f30;
+      --pink: #e8547a;
+      --pink2: #f7a8bb;
+      --coral: #ff8c69;
+      --gold: #f4c96e;
+      --green: #5ed4a0;
+      --purple: #c084fc;
+      --blue: #67c2f5;
+      --orange: #f97316;
+      --text: #f0dde4;
+      --text-muted: #9e6e7d;
+      --radius: 14px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    /* HEADER */
+    header { padding: 24px 20px 14px; text-align: center; background: linear-gradient(160deg, #2d0a18, #1a0a0f); border-bottom: 1px solid var(--border); }
+    header h1 { font-size: 1.5rem; font-weight: 800; background: linear-gradient(90deg, var(--pink), var(--coral)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    header .subtitle { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; }
+    header .tags { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-top: 10px; }
+    header .tag { background: var(--surface2); border: 1px solid var(--border); border-radius: 99px; font-size: 0.7rem; padding: 3px 10px; color: var(--pink2); }
+
+    /* TABS */
+    .tabs { display: flex; overflow-x: auto; gap: 0; border-bottom: 2px solid var(--border); scrollbar-width: none; }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab { flex: 1; min-width: 64px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 2px; color: var(--text-muted); border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; font-size: 0.72rem; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; }
+    .tab .tab-day { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .tab .tab-label { font-size: 0.73rem; font-weight: 600; }
+    .tab.active { color: var(--text); }
+
+    /* PANELS */
+    .panels { padding: 0 0 60px; }
+    .panel { display: none; animation: fadeIn 0.25s ease; }
+    .panel.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* DAY HEADER */
+    .day-hero { padding: 20px; display: flex; align-items: center; justify-content: space-between; }
+    .day-hero-left h2 { font-size: 1.2rem; font-weight: 800; }
+    .day-hero-left p { font-size: 0.78rem; color: var(--text-muted); margin-top: 3px; }
+    .ring-wrap { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
+    .ring-label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 700; }
+
+    /* WARNING BANNER */
+    .warn-banner { margin: 0 16px 4px; padding: 10px 14px; border-radius: 10px; background: rgba(249, 115, 22, 0.12); border: 1px solid rgba(249, 115, 22, 0.35); font-size: 0.8rem; color: #fdba74; }
+
+    /* CARDIO BANNER */
+    .cardio-banner { margin: 12px 16px 0; padding: 10px 14px; border-radius: 10px; background: rgba(103, 194, 245, 0.1); border: 1px solid rgba(103, 194, 245, 0.3); font-size: 0.8rem; color: var(--blue); }
+
+    /* SECTION LABEL */
+    .section-label { display: flex; align-items: center; gap: 8px; padding: 10px 16px 4px; }
+    .section-label span { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* PROGRESS */
+    .prog-wrap { height: 4px; background: var(--surface2); margin: 0 16px; border-radius: 99px; overflow: hidden; }
+    .prog-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--pink), var(--coral)); transition: width 0.4s; width: 0%; }
+    .prog-text { font-size: 0.72rem; color: var(--text-muted); padding: 4px 16px 8px; }
+
+    /* EXERCISE CARD */
+    .ex-list { display: flex; flex-direction: column; gap: 1px; background: var(--border); margin: 0 0 0; }
+    .ex-card { background: var(--surface); padding: 14px 16px; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; transition: background 0.15s; border: none; width: 100%; text-align: left; font-family: inherit; color: inherit; }
+    .ex-card:active { background: var(--surface2); }
+    .ex-card.done { opacity: 0.38; }
+    .ex-card.done .ex-name { text-decoration: line-through; }
+    .ex-body { flex: 1; }
+    .ex-name { font-size: 0.95rem; font-weight: 700; display: block; }
+    .ex-pills { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .pill { font-size: 0.7rem; padding: 2px 8px; border-radius: 99px; font-weight: 600; }
+    .pill-sets { background: rgba(232,84,122,0.15); color: var(--pink); border: 1px solid rgba(232,84,122,0.3); }
+    .pill-reps { background: rgba(244,201,110,0.15); color: var(--gold); border: 1px solid rgba(244,201,110,0.3); }
+    .pill-rest { background: rgba(103,194,245,0.12); color: var(--blue); border: 1px solid rgba(103,194,245,0.25); }
+    .pill-zone { background: rgba(94,212,160,0.12); color: var(--green); border: 1px solid rgba(94,212,160,0.25); }
+    .ex-note { font-size: 0.72rem; color: var(--text-muted); margin-top: 5px; }
+    .check { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; transition: all 0.2s; }
+    .ex-card.done .check { background: var(--green); border-color: var(--green); color: #000; animation: pop 0.3s ease; }
+    @keyframes pop { 0%{transform:scale(1)} 45%{transform:scale(1.35)} 100%{transform:scale(1)} }
+
+    /* METABOLIC SPECIAL */
+    .metabolic-info { margin: 12px 16px; padding: 12px 14px; border-radius: 10px; background: rgba(248,113,0,0.1); border: 1px solid rgba(248,113,0,0.3); }
+    .metabolic-info h3 { font-size: 0.9rem; font-weight: 700; color: var(--orange); }
+    .metabolic-info p { font-size: 0.78rem; color: #fdba74; margin-top: 4px; }
+
+    /* ACTIONS */
+    .day-actions { display: flex; gap: 10px; padding: 12px 16px; }
+    .btn { flex: 1; padding: 11px; border-radius: 10px; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; border: none; font-family: inherit; }
+    .btn:active { opacity: 0.7; }
+    .btn-timer { background: var(--surface2); color: var(--pink2); border: 1px solid var(--border); }
+    .btn-reset { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+
+    /* DONE BANNER */
+    .done-banner { margin: 0 16px 12px; padding: 14px; border-radius: 12px; text-align: center; font-weight: 700; font-size: 0.95rem; background: linear-gradient(135deg, var(--pink), var(--coral)); color: white; animation: pop 0.3s ease; }
+
+    /* TIMER OVERLAY */
+    .timer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: flex-end; justify-content: center; z-index: 100; animation: fadeBg 0.2s ease; }
+    @keyframes fadeBg { from{opacity:0} to{opacity:1} }
+    .timer-card { background: var(--surface); border-radius: 20px 20px 0 0; padding: 28px 24px 40px; width: 100%; max-width: 480px; display: flex; flex-direction: column; align-items: center; gap: 18px; animation: slideUp 0.25s ease; }
+    @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+    .timer-title { font-size: 1.1rem; font-weight: 700; }
+    .timer-presets { display: flex; gap: 8px; }
+    .preset { padding: 7px 14px; border-radius: 20px; background: var(--surface2); color: var(--text-muted); font-size: 0.82rem; font-weight: 600; cursor: pointer; border: 1px solid var(--border); transition: all 0.2s; font-family: inherit; }
+    .preset.active { background: var(--surface2); color: var(--pink); border-color: var(--pink); }
+    .timer-ring { position: relative; width: 130px; height: 130px; }
+    .timer-val { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; }
+    .timer-btns { display: flex; gap: 10px; width: 100%; }
+    .timer-btn { flex: 1; padding: 13px; border-radius: 12px; font-size: 0.9rem; font-weight: 700; cursor: pointer; border: none; font-family: inherit; transition: opacity 0.2s; }
+    .timer-btn:active { opacity: 0.7; }
+    .t-primary { background: var(--pink); color: white; }
+    .t-secondary { background: var(--surface2); color: var(--text-muted); border: 1px solid var(--border); }
+    .timer-close { color: var(--text-muted); font-size: 0.82rem; cursor: pointer; background: none; border: none; font-family: inherit; padding: 4px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌸 Rutina Personalizada</h1>
+  <div class="subtitle">Mujer · 5 días · Pérdida de grasa · Post-menisco</div>
+  <div class="tags">
+    <span class="tag">Glúteos</span>
+    <span class="tag">Isquios</span>
+    <span class="tag">Cuádriceps</span>
+    <span class="tag">Espalda completa</span>
+    <span class="tag">3 caras de hombro</span>
+    <span class="tag">Rodilla protegida</span>
+  </div>
+</header>
+
+<div class="tabs" id="tabs"></div>
+<div class="panels" id="panels"></div>
+
+<!-- TIMER -->
+<div class="timer-overlay" id="timerOverlay" style="display:none" onclick="closeTimer(event)">
+  <div class="timer-card" onclick="event.stopPropagation()">
+    <h3 class="timer-title">⏱ Descanso</h3>
+    <div class="timer-presets" id="timerPresets"></div>
+    <div class="timer-ring">
+      <svg width="130" height="130" viewBox="0 0 130 130">
+        <circle cx="65" cy="65" r="52" fill="none" stroke="#311520" stroke-width="9"/>
+        <circle id="timerArc" cx="65" cy="65" r="52" fill="none" stroke="#e8547a" stroke-width="9"
+          stroke-dasharray="326.7 326.7" stroke-linecap="round" transform="rotate(-90 65 65)"
+          style="transition:stroke-dasharray 0.5s ease"/>
+      </svg>
+      <span class="timer-val" id="timerVal">60s</span>
+    </div>
+    <div class="timer-btns">
+      <button class="timer-btn t-secondary" onclick="resetTimer()">Reiniciar</button>
+      <button class="timer-btn t-primary" id="timerToggleBtn" onclick="toggleTimer()">Iniciar</button>
+    </div>
+    <button class="timer-close" onclick="document.getElementById('timerOverlay').style.display='none'; stopTimer()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+const DAYS = [
+  {
+    id: 'lunes',
+    tab: 'Lunes',
+    label: 'Glúteos + Isquios',
+    color: '#e8547a',
+    warn: null,
+    cardio: true,
+    metabolic: false,
+    sections: [
+      {
+        title: null,
+        exercises: [
+          { name: 'Hip thrust con barra',              sets: 4, reps: '12-15', rest: '60s', note: 'Glúteo mayor' },
+          { name: 'Peso muerto rumano con mancuernas', sets: 3, reps: '12',    rest: '60s', note: 'Isquios desde cadera' },
+          { name: 'Curl femoral tumbado',              sets: 4, reps: '12',    rest: '60s', note: 'Isquios desde rodilla' },
+          { name: 'Abducción en máquina',              sets: 4, reps: '20',    rest: '45s', note: 'Glúteo medio' },
+          { name: 'Frog pump',                         sets: 3, reps: '20',    rest: '45s', note: 'Glúteo medio/menor' },
+          { name: 'Elevación de cadera a una pierna',  sets: 3, reps: '15 c/lado', rest: '45s', note: 'Glúteo mayor unilateral' },
+        ]
+      },
+      {
+        title: 'Core',
+        exercises: [
+          { name: 'Plancha frontal', sets: 3, reps: '40s', rest: '30s', note: '' },
+          { name: 'Dead bug',        sets: 3, reps: '12',  rest: '30s', note: '' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'martes',
+    tab: 'Martes',
+    label: 'Espalda completa + Bíceps',
+    color: '#c084fc',
+    warn: null,
+    cardio: false,
+    metabolic: false,
+    sections: [
+      {
+        title: null,
+        exercises: [
+          { name: 'Jalón al pecho agarre amplio',        sets: 4, reps: '12',       rest: '60s', note: 'Dorsal — plano vertical' },
+          { name: 'Jalón neutro agarre cerrado',         sets: 3, reps: '12',       rest: '60s', note: 'Dorsal + redondo mayor' },
+          { name: 'Remo en polea sentada',               sets: 3, reps: '12',       rest: '60s', note: 'Trapecio medio / romboides' },
+          { name: 'Remo con mancuerna a una mano',       sets: 3, reps: '12 c/lado',rest: '60s', note: 'Trapecio + redondo' },
+          { name: 'Pullover en polea',                   sets: 3, reps: '15',       rest: '45s', note: 'Trapecio inferior + dorsal' },
+          { name: 'Curl bíceps alterno con mancuernas',  sets: 3, reps: '12 c/lado',rest: '45s', note: '' },
+          { name: 'Curl martillo',                       sets: 3, reps: '12',       rest: '45s', note: 'Braquial + bíceps' },
+        ]
+      },
+      {
+        title: 'Core',
+        exercises: [
+          { name: 'Plancha lateral',   sets: 3, reps: '35s c/lado', rest: '30s', note: '' },
+          { name: 'Crunch bicicleta',  sets: 3, reps: '20',         rest: '30s', note: '' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'miercoles',
+    tab: 'Miérc.',
+    label: 'Pierna adaptada',
+    color: '#f97316',
+    warn: '⚠️ Rodilla protegida · Sin sentadilla profunda · No pasar 90° de flexión',
+    cardio: true,
+    metabolic: false,
+    sections: [
+      {
+        title: null,
+        exercises: [
+          { name: 'Sentadilla Smith (rango parcial)',      sets: 4, reps: '15',       rest: '60s', note: 'Cuádriceps — no pasar 90°' },
+          { name: 'Extensión cuádriceps (rango parcial)',  sets: 3, reps: '15',       rest: '45s', note: 'Cuádriceps — peso ligero' },
+          { name: 'Hip thrust unilateral',                 sets: 3, reps: '12 c/lado',rest: '60s', note: 'Glúteo mayor' },
+          { name: 'Curl femoral sentada',                  sets: 4, reps: '15',       rest: '45s', note: 'Isquios desde rodilla' },
+          { name: 'Curl femoral de pie en polea',          sets: 3, reps: '12 c/lado',rest: '45s', note: 'Isquios desde cadera' },
+          { name: 'Abducción en máquina',                  sets: 3, reps: '20',       rest: '45s', note: 'Glúteo medio' },
+          { name: 'Gemelos en máquina',                    sets: 3, reps: '20',       rest: '30s', note: '' },
+        ]
+      },
+      {
+        title: 'Core',
+        exercises: [
+          { name: 'Bird dog',                    sets: 3, reps: '12 c/lado', rest: '30s', note: '' },
+          { name: 'Elevación de piernas tumbada',sets: 3, reps: '15',        rest: '30s', note: '' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'jueves',
+    tab: 'Jueves',
+    label: 'Hombros + Pecho + Tríceps',
+    color: '#f4c96e',
+    warn: null,
+    cardio: true,
+    metabolic: false,
+    sections: [
+      {
+        title: null,
+        exercises: [
+          { name: 'Press militar con mancuernas',      sets: 4, reps: '12', rest: '60s', note: 'Deltoides anterior' },
+          { name: 'Elevaciones laterales',             sets: 4, reps: '15', rest: '45s', note: 'Deltoides medio' },
+          { name: 'Pájaros con mancuernas',            sets: 3, reps: '15', rest: '45s', note: 'Deltoides posterior' },
+          { name: 'Face pulls en polea',               sets: 3, reps: '15', rest: '45s', note: 'Deltoides posterior + manguito' },
+          { name: 'Press banca con mancuernas',        sets: 3, reps: '12', rest: '60s', note: 'Pecho' },
+          { name: 'Extensiones tríceps en polea alta', sets: 3, reps: '15', rest: '45s', note: 'Tríceps — cabeza larga' },
+          { name: 'Press francés con mancuerna',       sets: 3, reps: '12', rest: '45s', note: 'Tríceps — cabeza lateral' },
+        ]
+      },
+      {
+        title: 'Core',
+        exercises: [
+          { name: 'Rueda abdominal', sets: 3, reps: '10', rest: '45s', note: '' },
+          { name: 'Crunch en polea', sets: 3, reps: '15', rest: '45s', note: '' },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'viernes',
+    tab: 'Viernes',
+    label: 'Full Body Metabólico',
+    color: '#5ed4a0',
+    warn: null,
+    cardio: true,
+    metabolic: true,
+    sections: [
+      {
+        title: null,
+        exercises: [
+          { name: 'Hip thrust con mancuerna',            sets: 4, reps: '15',       rest: '30s', note: 'Glúteo mayor' },
+          { name: 'Curl femoral en polea de pie',        sets: 4, reps: '12 c/lado',rest: '30s', note: 'Isquios' },
+          { name: 'Extensión cuádriceps (rango parcial)',sets: 4, reps: '15',       rest: '30s', note: 'Cuádriceps' },
+          { name: 'Abducción en máquina',                sets: 4, reps: '20',       rest: '30s', note: 'Glúteo medio' },
+          { name: 'Remo en polea',                       sets: 4, reps: '15',       rest: '30s', note: 'Espalda' },
+          { name: 'Elevaciones laterales',               sets: 4, reps: '15',       rest: '30s', note: 'Hombro medio' },
+          { name: 'Curl bíceps con mancuernas',          sets: 4, reps: '12',       rest: '30s', note: 'Bíceps' },
+          { name: 'Extensión tríceps en polea',          sets: 4, reps: '12',       rest: '30s', note: 'Tríceps' },
+          { name: 'Plancha frontal',                     sets: 4, reps: '40s',      rest: '30s entre ejercicios / 90s entre rondas', note: 'Core' },
+        ]
+      }
+    ]
+  }
+];
+
+// ── STATE ──
+const STATE = JSON.parse(localStorage.getItem('yahaira_state') || '{}');
+function save() { localStorage.setItem('yahaira_state', JSON.stringify(STATE)); }
+function key(dayId, si, ei) { return `${dayId}_${si}_${ei}`; }
+function isDone(dayId, si, ei) { return !!STATE[key(dayId, si, ei)]; }
+function toggle(dayId, si, ei) { STATE[key(dayId, si, ei)] = !isDone(dayId, si, ei); save(); }
+
+// ── RENDER ──
+function totalEx(day) { return day.sections.reduce((a, s) => a + s.exercises.length, 0); }
+function doneEx(day) {
+  let d = 0;
+  day.sections.forEach((s, si) => s.exercises.forEach((_, ei) => { if (isDone(day.id, si, ei)) d++; }));
+  return d;
+}
+
+function buildTab(day, idx) {
+  const btn = document.createElement('button');
+  btn.className = 'tab';
+  btn.dataset.idx = idx;
+  btn.innerHTML = `<span class="tab-day">${day.tab}</span><span class="tab-label">${day.label.split(' ')[0]}</span>`;
+  btn.style.borderBottomColor = 'transparent';
+  btn.addEventListener('click', () => activateTab(idx));
+  return btn;
+}
+
+function buildPanel(day, idx) {
+  const panel = document.createElement('div');
+  panel.className = 'panel';
+  panel.id = `panel-${idx}`;
+
+  // Hero
+  const total = totalEx(day);
+  const hero = document.createElement('div');
+  hero.className = 'day-hero';
+  hero.innerHTML = `
+    <div class="day-hero-left">
+      <h2 style="color:${day.color}">${day.tab} — ${day.label}</h2>
+      <p>${day.metabolic ? '4 rondas · 30s entre ejercicios · 90s entre rondas' : ''}</p>
+    </div>
+    <div class="ring-wrap">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="22" fill="none" stroke="#311520" stroke-width="5"/>
+        <circle id="ring-${idx}" cx="28" cy="28" r="22" fill="none" stroke="${day.color}" stroke-width="5"
+          stroke-dasharray="0 138.2" stroke-linecap="round" transform="rotate(-90 28 28)"
+          style="transition:stroke-dasharray 0.4s ease"/>
+      </svg>
+      <span class="ring-label" id="rlabel-${idx}">0/${total}</span>
+    </div>`;
+  panel.appendChild(hero);
+
+  // Warn
+  if (day.warn) {
+    const w = document.createElement('div');
+    w.className = 'warn-banner';
+    w.textContent = day.warn;
+    panel.appendChild(w);
+  }
+
+  // Metabolic info
+  if (day.metabolic) {
+    const m = document.createElement('div');
+    m.className = 'metabolic-info';
+    m.innerHTML = `<h3>🔥 Circuito Metabólico</h3><p>Completa 4 rondas completas · 30s de descanso entre ejercicios · 90s de descanso entre rondas</p>`;
+    panel.appendChild(m);
+  }
+
+  // Progress
+  const pw = document.createElement('div'); pw.className = 'prog-wrap';
+  const pb = document.createElement('div'); pb.className = 'prog-bar'; pb.id = `pb-${idx}`;
+  pw.appendChild(pb); panel.appendChild(pw);
+  const pt = document.createElement('div'); pt.className = 'prog-text'; pt.id = `pt-${idx}`;
+  pt.textContent = `0 / ${total} ejercicios completados`;
+  panel.appendChild(pt);
+
+  // Sections
+  day.sections.forEach((section, si) => {
+    if (section.title) {
+      const sl = document.createElement('div');
+      sl.className = 'section-label';
+      sl.innerHTML = `<span>${section.title}</span>`;
+      panel.appendChild(sl);
+    }
+    const list = document.createElement('div');
+    list.className = 'ex-list';
+    section.exercises.forEach((ex, ei) => {
+      const card = document.createElement('button');
+      card.className = 'ex-card' + (isDone(day.id, si, ei) ? ' done' : '');
+      card.id = `ex-${idx}-${si}-${ei}`;
+      card.innerHTML = `
+        <div class="ex-body">
+          <span class="ex-name">${ex.name}</span>
+          <div class="ex-pills">
+            <span class="pill pill-sets">${ex.sets} series</span>
+            <span class="pill pill-reps">${ex.reps} reps</span>
+            <span class="pill pill-rest">⏱ ${ex.rest}</span>
+            ${ex.note ? `<span class="pill pill-zone">${ex.note}</span>` : ''}
+          </div>
+        </div>
+        <div class="check">${isDone(day.id, si, ei) ? '✓' : ''}</div>`;
+      card.addEventListener('click', () => {
+        toggle(day.id, si, ei);
+        updateCard(day, idx, si, ei);
+        updateProgress(day, idx);
+        if (isDone(day.id, si, ei)) openTimer(parseInt(ex.rest), true);
+      });
+      list.appendChild(card);
+    });
+    panel.appendChild(list);
+  });
+
+  // Cardio
+  if (day.cardio) {
+    const cb = document.createElement('div');
+    cb.className = 'cardio-banner';
+    cb.textContent = '🚴 Cardio: 15-20 min de bici estática o elíptica al finalizar';
+    panel.appendChild(cb);
+  }
+
+  // Actions
+  const actions = document.createElement('div');
+  actions.className = 'day-actions';
+  actions.innerHTML = `
+    <button class="btn btn-timer" onclick="openTimer(60, false)">⏱ Descanso</button>
+    <button class="btn btn-reset" onclick="resetDay('${day.id}',${idx})">Reiniciar día</button>`;
+  panel.appendChild(actions);
+
+  // Done banner placeholder
+  const db = document.createElement('div');
+  db.className = 'done-banner';
+  db.id = `done-${idx}`;
+  db.style.display = 'none';
+  db.textContent = '🎉 ¡Día completado! 💪 ¡Excelente trabajo!';
+  panel.appendChild(db);
+
+  return panel;
+}
+
+function updateCard(day, idx, si, ei) {
+  const card = document.getElementById(`ex-${idx}-${si}-${ei}`);
+  if (!card) return;
+  const done = isDone(day.id, si, ei);
+  card.className = 'ex-card' + (done ? ' done' : '');
+  card.querySelector('.check').textContent = done ? '✓' : '';
+}
+
+function updateProgress(day, idx) {
+  const total = totalEx(day);
+  const done = doneEx(day);
+  const pct = total > 0 ? (done / total) * 100 : 0;
+  document.getElementById(`pb-${idx}`).style.width = pct + '%';
+  document.getElementById(`pt-${idx}`).textContent = `${done} / ${total} ejercicios completados`;
+  const arc = document.getElementById(`ring-${idx}`);
+  const circ = 138.2;
+  arc.setAttribute('stroke-dasharray', `${(done / total) * circ} ${circ}`);
+  document.getElementById(`rlabel-${idx}`).textContent = `${done}/${total}`;
+  const db = document.getElementById(`done-${idx}`);
+  db.style.display = done === total ? 'block' : 'none';
+}
+
+function resetDay(dayId, idx) {
+  const day = DAYS.find(d => d.id === dayId);
+  day.sections.forEach((s, si) => s.exercises.forEach((_, ei) => {
+    STATE[key(dayId, si, ei)] = false;
+    updateCard(day, idx, si, ei);
+  }));
+  save();
+  updateProgress(day, idx);
+}
+
+// ── TABS ──
+let activeIdx = 0;
+function activateTab(idx) {
+  activeIdx = idx;
+  document.querySelectorAll('.tab').forEach((t, i) => {
+    const active = i === idx;
+    t.classList.toggle('active', active);
+    t.style.borderBottomColor = active ? DAYS[i].color : 'transparent';
+    t.style.color = active ? DAYS[i].color : '';
+  });
+  document.querySelectorAll('.panel').forEach((p, i) => p.classList.toggle('active', i === idx));
+}
+
+// ── INIT ──
+const tabsEl = document.getElementById('tabs');
+const panelsEl = document.getElementById('panels');
+DAYS.forEach((day, idx) => {
+  tabsEl.appendChild(buildTab(day, idx));
+  panelsEl.appendChild(buildPanel(day, idx));
+  updateProgress(day, idx);
+});
+activateTab(0);
+
+// ── TIMER ──
+const PRESETS = [30, 45, 60, 90];
+let timerDuration = 60, timerLeft = 60, timerRunning = false;
+let timerInterval = null, timerEnd = null;
+let audioCtx = null;
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+function beep() {
+  try {
+    const ctx = getAudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    [0, 0.25, 0.5].forEach(t => {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = 880; o.type = 'sine';
+      g.gain.setValueAtTime(1, ctx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.2);
+      o.start(ctx.currentTime + t); o.stop(ctx.currentTime + t + 0.2);
+    });
+  } catch(e) {}
+}
+
+function buildPresets() {
+  const el = document.getElementById('timerPresets');
+  el.innerHTML = '';
+  PRESETS.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'preset' + (timerDuration === s ? ' active' : '');
+    btn.textContent = s + 's';
+    btn.onclick = () => { selectPreset(s); };
+    el.appendChild(btn);
+  });
+}
+
+function selectPreset(s) {
+  timerDuration = s; timerLeft = s;
+  timerRunning = false; timerEnd = null;
+  clearInterval(timerInterval);
+  updateTimerUI();
+  buildPresets();
+}
+
+function openTimer(secs, autoStart) {
+  if (PRESETS.includes(secs)) timerDuration = secs;
+  else timerDuration = 60;
+  timerLeft = timerDuration;
+  timerRunning = false;
+  clearInterval(timerInterval);
+  buildPresets();
+  document.getElementById('timerOverlay').style.display = 'flex';
+  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+  if (autoStart) { timerEnd = Date.now() + timerLeft * 1000; timerRunning = true; startTick(); }
+  updateTimerUI();
+}
+
+function closeTimer(e) { if (e.target === document.getElementById('timerOverlay')) { stopTimer(); document.getElementById('timerOverlay').style.display = 'none'; } }
+function stopTimer() { clearInterval(timerInterval); timerRunning = false; }
+
+function toggleTimer() {
+  if (timerLeft === 0) { timerLeft = timerDuration; timerEnd = Date.now() + timerLeft * 1000; timerRunning = true; startTick(); }
+  else if (!timerRunning) { timerEnd = Date.now() + timerLeft * 1000; timerRunning = true; startTick(); }
+  else { timerRunning = false; clearInterval(timerInterval); }
+  updateTimerUI();
+}
+
+function startTick() {
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const rem = Math.round((timerEnd - Date.now()) / 1000);
+    if (rem <= 0) { timerLeft = 0; timerRunning = false; clearInterval(timerInterval); beep(); }
+    else timerLeft = rem;
+    updateTimerUI();
+  }, 300);
+}
+
+function resetTimer() { timerRunning = false; timerLeft = timerDuration; clearInterval(timerInterval); updateTimerUI(); }
+
+function updateTimerUI() {
+  const circ = 326.7;
+  const prog = timerLeft / timerDuration;
+  document.getElementById('timerArc').setAttribute('stroke-dasharray', `${circ * prog} ${circ}`);
+  document.getElementById('timerArc').setAttribute('stroke', timerLeft === 0 ? '#5ed4a0' : '#e8547a');
+  const m = Math.floor(timerLeft / 60), s = timerLeft % 60;
+  document.getElementById('timerVal').textContent = timerLeft === 0 ? '¡Lista!' : m > 0 ? `${m}:${String(s).padStart(2,'0')}` : `${s}s`;
+  document.getElementById('timerToggleBtn').textContent = timerRunning ? 'Pausar' : timerLeft === 0 ? 'Repetir' : 'Iniciar';
+}
+</script>
+</body>
+</html>
