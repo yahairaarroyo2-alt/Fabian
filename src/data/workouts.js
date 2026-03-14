@@ -8,8 +8,8 @@ export const workouts = [
         focus: "Pecho · Hombros · Tríceps",
         color: "#FF6B6B",
         exercises: [
-          { id: "1-1", name: "Press Barra Plano",          sets: 4, reps: "6–8",      equipment: "Barra",       image: `${BASE}/Barbell_Bench_Press/0.jpg` },
-          { id: "1-2", name: "Press Mancuernas Inclinado", sets: 3, reps: "10",       equipment: "Mancuernas",  image: `${BASE}/Incline_Dumbbell_Bench_Press/0.jpg` },
+          { id: "1-1", name: "Press Barra Plano",          sets: 4, reps: "6–8",      equipment: "Barra",       image: `${BASE}/Barbell_Bench_Press_-_Medium_Grip/0.jpg` },
+          { id: "1-2", name: "Press Mancuernas Inclinado", sets: 3, reps: "10",       equipment: "Mancuernas",  image: `${BASE}/Incline_Dumbbell_Press/0.jpg` },
           { id: "1-3", name: "Press Militar Mancuernas",   sets: 3, reps: "10",       equipment: "Mancuernas",  image: `${BASE}/Dumbbell_Shoulder_Press/0.jpg` },
           { id: "1-4", name: "Aperturas con Banda",        sets: 3, reps: "15",       equipment: "Banda",       image: `${BASE}/Dumbbell_Flyes/0.jpg` },
           { id: "1-5", name: "Elevaciones Laterales",      sets: 4, reps: "15",       equipment: "Mancuernas",  image: `${BASE}/Side_Lateral_Raise/0.jpg` },
@@ -25,7 +25,7 @@ export const workouts = [
         exercises: [
           { id: "2-1", name: "Sentadilla Barra",             sets: 4, reps: "6–8",      equipment: "Barra",        image: `${BASE}/Barbell_Full_Squat/0.jpg` },
           { id: "2-2", name: "Prensa Piernas con Banda",     sets: 3, reps: "12",       equipment: "Banda",        image: `${BASE}/Leg_Press/0.jpg` },
-          { id: "2-3", name: "Zancadas con Mancuernas",      sets: 3, reps: "10 c/lado",equipment: "Mancuernas",   image: `${BASE}/Dumbbell_Lunge/0.jpg` },
+          { id: "2-3", name: "Zancadas con Mancuernas",      sets: 3, reps: "10 c/lado",equipment: "Mancuernas",   image: `${BASE}/Dumbbell_Lunges/0.jpg` },
           { id: "2-4", name: "Extensión Cuádriceps (Banco)", sets: 3, reps: "15",       equipment: "Banco",        image: `${BASE}/Leg_Extensions/0.jpg` },
           { id: "2-5", name: "Elevación de Pantorrillas",    sets: 4, reps: "20",       equipment: "Peso corporal",image: `${BASE}/Standing_Calf_Raises/0.jpg` },
           { id: "2-6", name: "Plancha",                      sets: 3, reps: "45 seg",   equipment: "Peso corporal",image: `${BASE}/Plank/0.jpg` },
