@@ -1,4 +1,4 @@
-const BASE = "https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises";
+const BASE = "https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises";
 
 export const workouts = [
   {
