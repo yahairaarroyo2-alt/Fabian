@@ -8,14 +8,7 @@ export default function WorkoutDay({ workout }) {
   const [timerAutoStart, setTimerAutoStart] = useState(false);
 
   function toggle(id) {
-    setChecked((prev) => {
-      const wasChecked = prev[id];
-      if (!wasChecked) {
-        setTimerAutoStart(true);
-        setShowTimer(true);
-      }
-      return { ...prev, [id]: !wasChecked };
-    });
+    setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
   function resetAll() {
