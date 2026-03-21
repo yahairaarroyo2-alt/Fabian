@@ -441,3 +441,40 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 
 /* ─── Timer overlay hidden ───────────────────── */
 .timer-overlay.timer-hidden { opacity: 0; pointer-events: none; }
+
+/* ─── Confetti ───────────────────────────────────────── */
+.confetti-layer { position: fixed; inset: 0; z-index: 900; pointer-events: none; overflow: hidden; }
+.cf { position: absolute; border-radius: 2px; animation: cfFall linear forwards; }
+@keyframes cfFall { 0% { top: -30px; opacity: 1; transform: rotate(0deg) translateX(0); } 100% { top: 110vh; opacity: 0; transform: rotate(720deg) translateX(var(--dx)); } }
+
+/* ─── Celebration modal ──────────────────────────────── */
+.celeb-ov { position: fixed; inset: 0; background: rgba(0,0,0,.65); z-index: 1000; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity .4s; }
+.celeb-ov.show { opacity: 1; pointer-events: all; }
+.celeb-card { background: linear-gradient(160deg,#fff 55%,#f8f0ff 100%); border-radius: 28px; padding: 36px 28px 28px; text-align: center; max-width: 320px; width: calc(100% - 32px); box-shadow: 0 8px 60px rgba(0,0,0,.3); transform: scale(.6) translateY(30px); transition: transform .55s cubic-bezier(.34,1.56,.64,1); }
+.celeb-ov.show .celeb-card { transform: scale(1) translateY(0); }
+.celeb-em { font-size: 72px; display: block; margin-bottom: 14px; animation: celebEmIn .6s cubic-bezier(.34,1.56,.64,1) .1s both; }
+@keyframes celebEmIn { from { transform: scale(0) rotate(-30deg); opacity: 0; } to { transform: scale(1) rotate(0deg); opacity: 1; } }
+.celeb-title { font-size: 26px; font-weight: 800; color: #1c1c1e; margin-bottom: 8px; }
+.celeb-stats { font-size: 13px; font-weight: 700; color: #FF6B6B; background: #fff0ee; padding: 5px 16px; border-radius: 20px; display: inline-block; margin-bottom: 12px; }
+.celeb-msg { font-size: 14px; color: #636366; margin-bottom: 20px; line-height: 1.5; }
+.celeb-close { background: #1c1c1e; color: #fff; border: none; padding: 15px 32px; border-radius: 16px; font-size: 15px; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit; }
+
+/* ─── Weight history delete & delta ─────────────────── */
+.w-del-btn { width: 26px; height: 26px; border-radius: 50%; border: none; background: #fce4ec; color: #c62828; font-size: 12px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: inherit; }
+.w-delta { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-left: 6px; }
+.w-delta-up { background: #e8f5e9; color: #2e7d32; }
+.w-delta-down { background: #fce4ec; color: #c62828; }
+.w-hist-empty { text-align: center; padding: 24px 16px; color: #8e8e93; font-size: 13px; line-height: 1.6; }
+
+/* ─── Tab done dot ───────────────────────────────────── */
+.tab-done-dot { width: 5px; height: 5px; border-radius: 50%; background: #00B894; margin: 2px auto 0; display: block; }
+
+/* ─── GIF loading / error states ────────────────────── */
+.gif-loading { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 28px; color: #8e8e93; font-size: 13px; }
+.gif-spinner { width: 28px; height: 28px; border: 3px solid #f0f0f0; border-top-color: #FF6B6B; border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.gif-err { text-align: center; padding: 24px; color: #8e8e93; font-size: 13px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.gif-err span { font-size: 36px; }
+
+/* ─── Timer rep info ─────────────────────────────────── */
+.timer-rep-info { font-size: 13px; font-weight: 700; color: #FF6B6B; margin-top: -12px; }
