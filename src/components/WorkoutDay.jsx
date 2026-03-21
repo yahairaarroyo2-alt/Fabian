@@ -137,8 +137,12 @@ export default function WorkoutDay({ workout }) {
     setRepState({});
   }
 
-  // Feature 7: openTimer with timerExMeta
   function openTimer(restSeconds, exId) {
+    const timerInProgress = timerMeta.running || (timerMeta.timeLeft > 0 && timerMeta.timeLeft < timerMeta.duration);
+    if (timerInProgress) {
+      setShowTimer(true);
+      return;
+    }
     const ex = workout.exercises.find((e) => e.id === exId);
     let newCount = 0;
     if (ex) {
