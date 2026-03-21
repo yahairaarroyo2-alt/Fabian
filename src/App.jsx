@@ -49,11 +49,10 @@ export default function App() {
           <button
             key={w.id}
             className={`day-tab ${activeDay === i ? "active" : ""}`}
-            style={activeDay === i ? { borderBottomColor: w.color, color: w.color } : {}}
+            style={activeDay === i ? { background: w.color, color: "#fff" } : {}}
             onClick={() => setActiveDay(i)}
           >
-            <span className="tab-day">{w.day}</span>
-            <span className="tab-label">{w.label}</span>
+            {w.day}
             {completedDays[i] && <span className="tab-done-dot" />}
           </button>
         ))}
