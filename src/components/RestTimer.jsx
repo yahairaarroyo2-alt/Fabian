@@ -29,6 +29,7 @@ function playBeep(audioCtxRef) {
 
 function notifyDone(audioCtxRef) {
   playBeep(audioCtxRef);
+  navigator.vibrate?.([200, 100, 200]);
   if ("Notification" in window && Notification.permission === "granted") {
     new Notification("FBA — Descanso terminado", {
       body: "¡A por la siguiente serie!",
@@ -38,9 +39,15 @@ function notifyDone(audioCtxRef) {
   }
 }
 
-export default function RestTimer({ onClose, autoStart = false }) {
-  const [duration, setDuration] = useState(60);
-  const [timeLeft, setTimeLeft] = useState(60);
+export default function RestTimer({
+  onClose,
+  defaultDuration = 60,
+  hidden = false,
+  onHide,
+  onRunningChange,
+}) {
+  const [duration, setDuration] = useState(defaultDuration);
+  const [timeLeft, setTimeLeft] = useState(defaultDuration);
   const [running, setRunning] = useState(false);
   const intervalRef = useRef(null);
   const endTimeRef = useRef(null);
@@ -51,11 +58,12 @@ export default function RestTimer({ onClose, autoStart = false }) {
     if ("Notification" in window && Notification.permission === "default") {
       Notification.requestPermission();
     }
-    if (autoStart) {
-      endTimeRef.current = Date.now() + 60 * 1000;
+    const timer = setTimeout(() => {
+      endTimeRef.current = Date.now() + defaultDuration * 1000;
       setRunning(true);
-    }
+    }, 350);
     return () => {
+      clearTimeout(timer);
       if (audioCtxRef.current) audioCtxRef.current.close();
     };
   }, []);
@@ -78,6 +86,12 @@ export default function RestTimer({ onClose, autoStart = false }) {
     }
     return () => clearInterval(intervalRef.current);
   }, [running]);
+
+  useEffect(() => {
+    if (onRunningChange) {
+      onRunningChange(running, timeLeft, duration);
+    }
+  }, [running, timeLeft, duration]);
 
   function selectPreset(secs) {
     setDuration(secs);
@@ -107,6 +121,10 @@ export default function RestTimer({ onClose, autoStart = false }) {
     setTimeLeft(duration);
   }
 
+  function handleOverlayClick() {
+    if (onHide) onHide();
+  }
+
   const progress = timeLeft / duration;
   const radius = 54;
   const circumference = 2 * Math.PI * radius;
@@ -116,7 +134,10 @@ export default function RestTimer({ onClose, autoStart = false }) {
   const label = mins > 0 ? `${mins}:${String(secs).padStart(2, "0")}` : `${secs}s`;
 
   return (
-    <div className="timer-overlay" onClick={onClose}>
+    <div
+      className={`timer-overlay${hidden ? " timer-hidden" : ""}`}
+      onClick={handleOverlayClick}
+    >
       <div className="timer-card" onClick={(e) => e.stopPropagation()}>
         <h3 className="timer-title">Descanso</h3>
         <div className="timer-presets">
@@ -151,7 +172,6 @@ export default function RestTimer({ onClose, autoStart = false }) {
             {running ? "Pausar" : timeLeft === 0 ? "Repetir" : "Iniciar"}
           </button>
         </div>
-        <button className="timer-close" onClick={onClose}>Cerrar</button>
       </div>
     </div>
   );
