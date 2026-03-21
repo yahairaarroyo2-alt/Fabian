@@ -45,6 +45,8 @@ export default function RestTimer({
   hidden = false,
   onHide,
   onRunningChange,
+  repsDone = 0,
+  totalSets = 0,
 }) {
   const [duration, setDuration] = useState(defaultDuration);
   const [timeLeft, setTimeLeft] = useState(defaultDuration);
@@ -140,6 +142,9 @@ export default function RestTimer({
     >
       <div className="timer-card" onClick={(e) => e.stopPropagation()}>
         <h3 className="timer-title">Descanso</h3>
+        {totalSets > 0 && (
+          <p className="timer-rep-info">Serie {repsDone} de {totalSets}</p>
+        )}
         <div className="timer-presets">
           {PRESETS.map((s) => (
             <button

@@ -14,6 +14,7 @@ export default function ExerciseCard({
 }) {
   const [showImage, setShowImage] = useState(false);
   const [frame, setFrame] = useState(0);
+  const [imgState, setImgState] = useState('loading'); // 'loading' | 'loaded' | 'error'
   const intervalRef = useRef(null);
 
   useEffect(() => {
@@ -31,6 +32,7 @@ export default function ExerciseCard({
   function handleImageToggle(e) {
     e.stopPropagation();
     setShowImage((prev) => !prev);
+    setImgState('loading');
   }
 
   function handleOpenTimer(e) {
@@ -89,13 +91,25 @@ export default function ExerciseCard({
           </button>
         </div>
 
-        {/* Image */}
+        {/* Feature 6: Image with loading/error state */}
         {showImage && exercise.image && (
           <div className="exercise-gif-wrap" onClick={(e) => e.stopPropagation()}>
+            {imgState === 'loading' && (
+              <div className="gif-loading"><div className="gif-spinner" /><span>Cargando…</span></div>
+            )}
+            {imgState === 'error' && (
+              <div className="gif-err">
+                <span>📹</span>
+                <p>GIF no disponible</p>
+              </div>
+            )}
             <img
-              src={exercise.image.replace("/0.jpg", `/${frame}.jpg`)}
+              src={exercise.image.replace('/0.jpg', `/${frame}.jpg`)}
               alt={exercise.name}
               className="exercise-gif"
+              style={imgState !== 'loaded' ? { display: 'none' } : {}}
+              onLoad={() => setImgState('loaded')}
+              onError={() => setImgState('error')}
             />
           </div>
         )}

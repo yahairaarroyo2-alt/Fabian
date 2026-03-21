@@ -1,10 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { workouts } from "./data/workouts";
 import WorkoutDay from "./components/WorkoutDay";
 import "./App.css";
 
 export default function App() {
   const [activeDay, setActiveDay] = useState(0);
+
+  const [completedDays, setCompletedDays] = useState(() =>
+    workouts.map((w) => {
+      try {
+        const checked = JSON.parse(localStorage.getItem(`fba_checked_${w.id}`) || '{}');
+        return w.exercises.every((e) => checked[e.id]);
+      } catch { return false; }
+    })
+  );
+
+  useEffect(() => {
+    const onStorage = () => {
+      setCompletedDays(workouts.map((w) => {
+        try {
+          const checked = JSON.parse(localStorage.getItem(`fba_checked_${w.id}`) || '{}');
+          return w.exercises.every((e) => checked[e.id]);
+        } catch { return false; }
+      }));
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
+  useEffect(() => {
+    setCompletedDays(workouts.map((w) => {
+      try {
+        const checked = JSON.parse(localStorage.getItem(`fba_checked_${w.id}`) || '{}');
+        return w.exercises.every((e) => checked[e.id]);
+      } catch { return false; }
+    }));
+  }, [activeDay]);
 
   return (
     <div className="app">
@@ -23,6 +54,7 @@ export default function App() {
           >
             <span className="tab-day">{w.day}</span>
             <span className="tab-label">{w.label}</span>
+            {completedDays[i] && <span className="tab-done-dot" />}
           </button>
         ))}
       </nav>
