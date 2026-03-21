@@ -20,7 +20,7 @@ export default function WorkoutDay({ workout }) {
   const [timerKey, setTimerKey] = useState(0);
   const [timerDuration, setTimerDuration] = useState(60);
   const [timerMeta, setTimerMeta] = useState({ running: false, timeLeft: 0, duration: 60 });
-  const [timerExMeta, setTimerExMeta] = useState({ repsDone: 0, totalSets: 0 });
+  const [timerExMeta, setTimerExMeta] = useState({ repsDone: 0, totalSets: 0, exId: null });
   const [weightLog, setWeightLog] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("fba_weights_v1") || "{}");
@@ -61,7 +61,13 @@ export default function WorkoutDay({ workout }) {
 
   useEffect(() => {
     if (weightModal.open && weightInputRef.current) {
-      setTimeout(() => weightInputRef.current?.focus(), 100);
+      const lastKg = weightLog[weightModal.name]?.at(-1)?.kg;
+      setTimeout(() => {
+        if (weightInputRef.current) {
+          if (lastKg != null) weightInputRef.current.value = lastKg;
+          weightInputRef.current.focus();
+        }
+      }, 100);
     }
   }, [weightModal.open]);
 
@@ -142,7 +148,7 @@ export default function WorkoutDay({ workout }) {
         setChecked((prev) => ({ ...prev, [exId]: true }));
         showToast("✅ ¡Serie completada!");
       }
-      setTimerExMeta({ repsDone: newCount, totalSets: ex.sets });
+      setTimerExMeta({ repsDone: newCount, totalSets: ex.sets, exId: exId });
     }
     setTimerDuration(restSeconds);
     setTimerKey((k) => k + 1);
@@ -162,6 +168,14 @@ export default function WorkoutDay({ workout }) {
     }));
     setWeightModal({ open: false, id: null, name: "" });
     showToast("💪 Peso guardado");
+  }
+
+  function resetTimerReps() {
+    const { exId } = timerExMeta;
+    if (!exId) return;
+    setRepState((prev) => { const u = { ...prev }; delete u[exId]; return u; });
+    setChecked((prev) => { const u = { ...prev }; delete u[exId]; return u; });
+    setTimerExMeta((prev) => ({ ...prev, repsDone: 0 }));
   }
 
   // Feature 2: Delete weight entry
@@ -264,6 +278,7 @@ export default function WorkoutDay({ workout }) {
           onClose={() => setShowTimer(false)}
           repsDone={timerExMeta.repsDone}
           totalSets={timerExMeta.totalSets}
+          onResetReps={resetTimerReps}
         />
       )}
 

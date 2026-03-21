@@ -47,6 +47,7 @@ export default function RestTimer({
   onRunningChange,
   repsDone = 0,
   totalSets = 0,
+  onResetReps,
 }) {
   const [duration, setDuration] = useState(defaultDuration);
   const [timeLeft, setTimeLeft] = useState(defaultDuration);
@@ -144,6 +145,9 @@ export default function RestTimer({
         <h3 className="timer-title">Descanso</h3>
         {totalSets > 0 && (
           <p className="timer-rep-info">Serie {repsDone} de {totalSets}</p>
+        )}
+        {totalSets > 0 && onResetReps && (
+          <button className="rep-reset-btn" onClick={onResetReps}>↺ Reiniciar series</button>
         )}
         <div className="timer-presets">
           {PRESETS.map((s) => (
