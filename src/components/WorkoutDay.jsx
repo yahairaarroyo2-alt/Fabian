@@ -8,7 +8,7 @@ function formatTime(secs) {
   return m > 0 ? `${m}:${String(s).padStart(2, "0")}` : `${s}s`;
 }
 
-export default function WorkoutDay({ workout }) {
+export default function WorkoutDay({ workout, onDayComplete }) {
   const [checked, setChecked] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(`fba_checked_${workout.id}`) || "{}");
@@ -71,10 +71,10 @@ export default function WorkoutDay({ workout }) {
     }
   }, [weightModal.open]);
 
-  // Feature 1: Celebration modal trigger
   useEffect(() => {
     if (allDone && !prevAllDoneRef.current) {
       setTimeout(() => setShowCeleb(true), 400);
+      onDayComplete?.();
     }
     prevAllDoneRef.current = allDone;
   }, [allDone]);
@@ -130,11 +130,13 @@ export default function WorkoutDay({ workout }) {
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
-  // Feature 5: Confirmation before reset
   function resetAll() {
     if (!window.confirm('¿Reiniciar el progreso del día? Se borrarán las series y ejercicios completados.')) return;
     setChecked({});
     setRepState({});
+    setShowTimer(false);
+    setTimerMeta({ running: false, timeLeft: 0, duration: 60 });
+    setTimerKey((k) => k + 1);
   }
 
   function openTimer(restSeconds, exId) {
@@ -164,12 +166,14 @@ export default function WorkoutDay({ workout }) {
   }
 
   function saveWeight(kg) {
+    if (!kg || Number(kg) <= 0) return;
     const name = weightModal.name;
     const entry = { date: new Date().toLocaleDateString("es-ES"), kg: Number(kg) };
-    setWeightLog((prev) => ({
-      ...prev,
-      [name]: [...(prev[name] || []), entry],
-    }));
+    setWeightLog((prev) => {
+      const entries = [...(prev[name] || []), entry];
+      if (entries.length > 30) entries.shift();
+      return { ...prev, [name]: entries };
+    });
     setWeightModal({ open: false, id: null, name: "" });
     showToast("💪 Peso guardado");
   }
@@ -279,7 +283,6 @@ export default function WorkoutDay({ workout }) {
           hidden={!showTimer}
           onHide={() => setShowTimer(false)}
           onRunningChange={handleTimerState}
-          onClose={() => setShowTimer(false)}
           repsDone={timerExMeta.repsDone}
           totalSets={timerExMeta.totalSets}
           onResetReps={resetTimerReps}

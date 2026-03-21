@@ -40,7 +40,6 @@ function notifyDone(audioCtxRef) {
 }
 
 export default function RestTimer({
-  onClose,
   defaultDuration = 60,
   hidden = false,
   onHide,
@@ -57,7 +56,7 @@ export default function RestTimer({
   const audioCtxRef = useRef(null);
 
   useEffect(() => {
-    audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)();
+    try { audioCtxRef.current = new (window.AudioContext || window.webkitAudioContext)(); } catch {}
     if ("Notification" in window && Notification.permission === "default") {
       Notification.requestPermission();
     }

@@ -59,7 +59,17 @@ export default function App() {
       </nav>
 
       <main className="app-main">
-        <WorkoutDay key={activeDay} workout={workouts[activeDay]} />
+        <WorkoutDay
+          key={activeDay}
+          workout={workouts[activeDay]}
+          onDayComplete={() =>
+            setCompletedDays((prev) => {
+              const next = [...prev];
+              next[activeDay] = true;
+              return next;
+            })
+          }
+        />
       </main>
     </div>
   );
