@@ -94,6 +94,11 @@
     .cb { background: var(--blue-light);   color: var(--blue); }
     .cv { background: var(--purple-light); color: var(--purple); }
 
+    .set-dots { display: flex; gap: 6px; margin-top: 10px; align-items: center; }
+    .set-dot { width: 10px; height: 10px; border-radius: 50%; background: #ede8f0; }
+    .set-dot.done { background: #e91e8c; animation: dotPop .35s cubic-bezier(.34,1.56,.64,1) forwards; }
+    @keyframes dotPop { 0% { transform: scale(0); background: #ede8f0; } 65% { transform: scale(1.45); } 100% { transform: scale(1.15); background: #e91e8c; } }
+
     .ex-acts { display: flex; gap: 8px; margin-top: 12px; }
     .ex-btn  { flex: 1; padding: 9px 8px; border-radius: 12px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 5px; transition: transform .15s; }
     .ex-btn:active { transform: scale(.96); }
@@ -431,6 +436,9 @@ function cards(list, all, doneSet, d) {
         <span class="chip cp">📊 ${ex.sets} × ${ex.reps}</span>
         <span class="chip cb">⏱ ${ex.rest}s descanso</span>
         <span class="chip cv">🏋 ${ex.equip}</span>
+      </div>
+      <div class="set-dots" id="dots${d}_${i}">
+        ${Array.from({length:ex.sets},(_,si)=>`<span class="set-dot${isDone?' done':''}" id="dot${d}_${i}_${si}"></span>`).join('')}
       </div>
       <div class="ex-acts">
         <button class="ex-btn btn-view" onclick="openGif(${d},${i})">🎬 Ver ejercicio</button>
