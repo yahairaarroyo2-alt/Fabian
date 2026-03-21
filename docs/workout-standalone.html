@@ -246,12 +246,12 @@
 <!-- CELEBRATION -->
 <div class="confetti-layer" id="confetti"></div>
 <div class="celeb-ov" id="celebOv" onclick="if(event.target===this)closeCeleb()">
-  <div class="celeb-card">
+  <div class="celeb-card" id="celebCard">
     <span class="celeb-em">🏆</span>
-    <p class="celeb-title">¡Día completado!</p>
+    <p class="celeb-title">¡Completado!</p>
     <p class="celeb-stats" id="celebStats"></p>
-    <p class="celeb-msg" id="celebMsg">¡Increíble trabajo!</p>
-    <div class="celeb-progress"><div class="celeb-progress-bar"></div></div>
+    <p class="celeb-msg" id="celebMsg"></p>
+    <div class="celeb-progress"><div class="celeb-progress-bar" id="celebBar"></div></div>
     <button class="celeb-close" onclick="closeCeleb()">¡Gracias! 💪</button>
   </div>
 </div>
