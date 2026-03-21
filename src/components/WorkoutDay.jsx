@@ -20,6 +20,7 @@ export default function WorkoutDay({ workout }) {
   const [timerKey, setTimerKey] = useState(0);
   const [timerDuration, setTimerDuration] = useState(60);
   const [timerMeta, setTimerMeta] = useState({ running: false, timeLeft: 0, duration: 60 });
+  const [timerExMeta, setTimerExMeta] = useState({ repsDone: 0, totalSets: 0 });
   const [weightLog, setWeightLog] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem("fba_weights_v1") || "{}");
@@ -36,8 +37,15 @@ export default function WorkoutDay({ workout }) {
   });
   const [weightModal, setWeightModal] = useState({ open: false, id: null, name: "" });
   const [toast, setToast] = useState({ text: "", show: false });
+  const [showCeleb, setShowCeleb] = useState(false);
   const weightInputRef = useRef(null);
   const toastTimerRef = useRef(null);
+
+  const total = workout.exercises.length;
+  const done = workout.exercises.filter((e) => checked[e.id]).length;
+  const allDone = done === total;
+
+  const prevAllDoneRef = useRef(allDone);
 
   useEffect(() => {
     localStorage.setItem(`fba_checked_${workout.id}`, JSON.stringify(checked));
@@ -57,6 +65,53 @@ export default function WorkoutDay({ workout }) {
     }
   }, [weightModal.open]);
 
+  // Feature 1: Celebration modal trigger
+  useEffect(() => {
+    if (allDone && !prevAllDoneRef.current) {
+      setTimeout(() => setShowCeleb(true), 400);
+    }
+    prevAllDoneRef.current = allDone;
+  }, [allDone]);
+
+  // Feature 1: Launch confetti when showCeleb becomes true
+  function launchConfetti() {
+    const layer = document.getElementById('fba-confetti');
+    if (!layer) return;
+    layer.innerHTML = '';
+    const cols = ['#FF6B6B','#00B894','#A29BFE','#FDCB6E','#fd79a8','#74b9ff','#55efc4'];
+    for (let i = 0; i < 100; i++) {
+      const el = document.createElement('div');
+      el.className = 'cf';
+      const sz = 5 + Math.random() * 9;
+      const circ = Math.random() > 0.5;
+      el.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${circ?sz:sz*0.45}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${circ?'50%':'2px'};animation-duration:${1.3+Math.random()*2.2}s;animation-delay:${Math.random()*0.7}s;--dx:${-150+Math.random()*300}px;`;
+      layer.appendChild(el);
+    }
+    setTimeout(() => { if (layer) layer.innerHTML = ''; }, 5000);
+  }
+
+  useEffect(() => {
+    if (showCeleb) {
+      launchConfetti();
+    }
+  }, [showCeleb]);
+
+  // Feature 3: Wake Lock
+  useEffect(() => {
+    if (!('wakeLock' in navigator)) return;
+    let lock = null;
+    const acquire = async () => {
+      try { lock = await navigator.wakeLock.request('screen'); } catch {}
+    };
+    acquire();
+    const onVisible = () => { if (document.visibilityState === 'visible') acquire(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      lock?.release().catch(() => {});
+    };
+  }, []);
+
   function showToast(text) {
     if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
     setToast({ text, show: true });
@@ -69,23 +124,25 @@ export default function WorkoutDay({ workout }) {
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
+  // Feature 5: Confirmation before reset
   function resetAll() {
+    if (!window.confirm('¿Reiniciar el progreso del día? Se borrarán las series y ejercicios completados.')) return;
     setChecked({});
     setRepState({});
   }
 
+  // Feature 7: openTimer with timerExMeta
   function openTimer(restSeconds, exId) {
     const ex = workout.exercises.find((e) => e.id === exId);
+    let newCount = 0;
     if (ex) {
-      const newCount = Math.min((repState[exId] || 0) + 1, ex.sets);
-      setRepState((prev) => {
-        const updated = { ...prev, [exId]: newCount };
-        return updated;
-      });
-      if ((repState[exId] || 0) + 1 >= ex.sets) {
+      newCount = Math.min((repState[exId] || 0) + 1, ex.sets);
+      setRepState((prev) => ({ ...prev, [exId]: newCount }));
+      if (newCount >= ex.sets) {
         setChecked((prev) => ({ ...prev, [exId]: true }));
         showToast("✅ ¡Serie completada!");
       }
+      setTimerExMeta({ repsDone: newCount, totalSets: ex.sets });
     }
     setTimerDuration(restSeconds);
     setTimerKey((k) => k + 1);
@@ -107,13 +164,18 @@ export default function WorkoutDay({ workout }) {
     showToast("💪 Peso guardado");
   }
 
+  // Feature 2: Delete weight entry
+  function deleteWeight(name, idx) {
+    setWeightLog((prev) => {
+      const entries = [...(prev[name] || [])];
+      entries.splice(idx, 1);
+      return { ...prev, [name]: entries };
+    });
+  }
+
   const handleTimerState = useCallback((running, timeLeft, duration) => {
     setTimerMeta({ running, timeLeft, duration });
   }, []);
-
-  const total = workout.exercises.length;
-  const done = workout.exercises.filter((e) => checked[e.id]).length;
-  const allDone = done === total;
 
   const timerVisible = showTimer || timerMeta.running;
   const miniTimerVisible = !showTimer && timerMeta.running;
@@ -124,6 +186,22 @@ export default function WorkoutDay({ workout }) {
 
   return (
     <div className="workout-day">
+      {/* Feature 1: Confetti layer */}
+      <div id="fba-confetti" className="confetti-layer" />
+
+      {/* Feature 1: Celebration modal */}
+      {showCeleb && (
+        <div className="celeb-ov show" onClick={() => setShowCeleb(false)}>
+          <div className="celeb-card" onClick={(e) => e.stopPropagation()}>
+            <span className="celeb-em">🏆</span>
+            <p className="celeb-title">¡Completado!</p>
+            <p className="celeb-stats">{total} ejercicios completados 🎯</p>
+            <p className="celeb-msg">¡Lo aplastaste hoy, Fabian! Descansa bien 🔥</p>
+            <button className="celeb-close" onClick={() => setShowCeleb(false)}>¡Gracias! 💪</button>
+          </div>
+        </div>
+      )}
+
       {/* Header */}
       <div className="day-header" style={{ background: workout.color }}>
         <div>
@@ -175,12 +253,6 @@ export default function WorkoutDay({ workout }) {
         </button>
       </div>
 
-      {allDone && (
-        <div className="completed-banner" style={{ background: workout.color }}>
-          🎉 ¡Día completado, Fabian! 💪
-        </div>
-      )}
-
       {/* Rest Timer */}
       {timerVisible && (
         <RestTimer
@@ -190,6 +262,8 @@ export default function WorkoutDay({ workout }) {
           onHide={() => setShowTimer(false)}
           onRunningChange={handleTimerState}
           onClose={() => setShowTimer(false)}
+          repsDone={timerExMeta.repsDone}
+          totalSets={timerExMeta.totalSets}
         />
       )}
 
@@ -264,18 +338,40 @@ export default function WorkoutDay({ workout }) {
             >
               Guardar
             </button>
-            {weightLog[weightModal.name]?.length > 0 && (
+            {/* Feature 2: Weight history with delete and delta */}
+            {weightLog[weightModal.name]?.length > 0 ? (
               <>
                 <p className="w-hist-title">Historial</p>
                 <ul className="w-hist-list">
-                  {[...(weightLog[weightModal.name] || [])].reverse().slice(0, 10).map((entry, i) => (
-                    <li key={i} className="w-hist-item">
-                      <span className="w-hist-date">{entry.date}</span>
-                      <span className="w-hist-kg">{entry.kg} kg</span>
-                    </li>
-                  ))}
+                  {[...(weightLog[weightModal.name] || [])].reverse().slice(0, 10).map((entry, i) => {
+                    const realIdx = (weightLog[weightModal.name]?.length || 0) - 1 - i;
+                    const prevEntry = [...(weightLog[weightModal.name] || [])].reverse()[i + 1];
+                    let delta = null;
+                    if (prevEntry) {
+                      const diff = (entry.kg - prevEntry.kg).toFixed(1);
+                      if (diff > 0) delta = <span className="w-delta w-delta-up">+{diff}</span>;
+                      else if (diff < 0) delta = <span className="w-delta w-delta-down">{diff}</span>;
+                    }
+                    return (
+                      <li key={i} className="w-hist-item">
+                        <span className="w-hist-date">{entry.date}</span>
+                        <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                          <span>
+                            <span className="w-hist-kg">{entry.kg} kg</span>
+                            {delta}
+                          </span>
+                          <button
+                            className="w-del-btn"
+                            onClick={() => deleteWeight(weightModal.name, realIdx)}
+                          >✕</button>
+                        </span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </>
+            ) : (
+              <p className="w-hist-empty">Aquí verás tu progreso.<br/>¡Anota tu primer peso!</p>
             )}
           </div>
         </div>
