@@ -31,8 +31,10 @@ export default function ExerciseCard({
 
   function handleImageToggle(e) {
     e.stopPropagation();
-    setShowImage((prev) => !prev);
-    setImgState('loading');
+    setShowImage((prev) => {
+      if (!prev) setImgState('loading');
+      return !prev;
+    });
   }
 
   function handleOpenTimer(e) {
@@ -108,8 +110,8 @@ export default function ExerciseCard({
               alt={exercise.name}
               className="exercise-gif"
               style={imgState !== 'loaded' ? { display: 'none' } : {}}
-              onLoad={() => setImgState('loaded')}
-              onError={() => setImgState('error')}
+              onLoad={() => setImgState((s) => s === 'loading' ? 'loaded' : s)}
+              onError={() => setImgState((s) => s === 'loading' ? 'error' : s)}
             />
           </div>
         )}
