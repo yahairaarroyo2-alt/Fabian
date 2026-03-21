@@ -389,3 +389,55 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   font-size: 0.85rem;
   padding: 4px;
 }
+
+/* ─── Exercise chips ──────────────────────────── */
+.ex-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.chip { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 20px; white-space: nowrap; }
+.chip-sets  { background: #fff0ee; color: #c0392b; }
+.chip-rest  { background: #e8f4fd; color: #2980b9; }
+.chip-equip { background: #f0eeff; color: #6c5ce7; }
+.chip-weight { background: #fff8e6; color: #c0392b; border: none; cursor: pointer; font-family: inherit; }
+
+/* ─── Set dots ────────────────────────────────── */
+.set-dots { display: flex; gap: 6px; margin-top: 10px; align-items: center; }
+.set-dot { width: 10px; height: 10px; border-radius: 50%; background: #e0e0e0; transition: background 0.2s; }
+.set-dot.done { animation: dotPop 0.35s cubic-bezier(0.34,1.56,0.64,1) forwards; }
+@keyframes dotPop { 0% { transform: scale(0); } 65% { transform: scale(1.45); } 100% { transform: scale(1.15); } }
+
+/* ─── Exercise action buttons ─────────────────── */
+.ex-acts { display: flex; gap: 8px; margin-top: 12px; }
+.ex-btn { flex: 1; padding: 9px 6px; border-radius: 12px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 4px; transition: opacity 0.15s; }
+.ex-btn:active { opacity: 0.7; }
+.btn-view { background: #f5f5f5; color: #636366; }
+.btn-rest { background: #e8f4fd; color: #1565c0; }
+
+/* ─── Mini timer ─────────────────────────────── */
+.mini-timer { position: fixed; bottom: 24px; right: 16px; z-index: 150; background: #1c1c1e; color: #fff; border-radius: 28px; padding: 10px 16px 10px 10px; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); cursor: pointer; user-select: none; animation: miniPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes miniPop { from { transform: scale(0.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.mini-timer:active { opacity: 0.8; }
+.mini-num { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; }
+
+/* ─── Weight modal ───────────────────────────── */
+.weight-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: flex; align-items: flex-end; justify-content: center; animation: fadeIn 0.2s ease; }
+.weight-sheet { background: #fff; border-radius: 20px 20px 0 0; width: 100%; max-width: 480px; padding: 0 20px 40px; max-height: 85vh; overflow-y: auto; animation: slideUp 0.3s cubic-bezier(0.32,0.72,0,1); position: relative; }
+.weight-handle { width: 36px; height: 4px; background: #e0e0e0; border-radius: 2px; margin: 12px auto 16px; }
+.weight-close { position: absolute; top: 14px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: #f5f5f5; border: none; cursor: pointer; font-size: 15px; color: #8e8e93; }
+.weight-title { font-size: 18px; font-weight: 800; color: #1c1c1e; margin-bottom: 3px; }
+.weight-sub { font-size: 12px; color: #8e8e93; margin-bottom: 16px; }
+.w-input-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+.w-input { flex: 1; font-size: 42px; font-weight: 800; text-align: center; border: 2.5px solid #e5e5ea; border-radius: 14px; padding: 12px 8px; color: #1c1c1e; outline: none; -webkit-appearance: none; background: #fff; }
+.w-input:focus { border-color: #1c1c1e; }
+.w-unit { font-size: 20px; font-weight: 700; color: #8e8e93; }
+.w-save { width: 100%; padding: 15px; border-radius: 14px; border: none; background: #1c1c1e; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+.w-hist-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: #8e8e93; margin: 20px 0 10px; }
+.w-hist-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.w-hist-item { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #f9f9f9; border-radius: 12px; border: 1px solid #e5e5ea; font-size: 13px; }
+.w-hist-date { color: #8e8e93; }
+.w-hist-kg { font-weight: 700; color: #1c1c1e; }
+
+/* ─── Toast ──────────────────────────────────── */
+.toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(12px); background: #1c1c1e; color: #fff; padding: 10px 20px; border-radius: 20px; font-size: 13px; font-weight: 600; z-index: 300; opacity: 0; transition: opacity 0.25s, transform 0.25s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ─── Timer overlay hidden ───────────────────── */
+.timer-overlay.timer-hidden { opacity: 0; pointer-events: none; }
