@@ -44,6 +44,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 /* ─── Day Tabs ──────────────────────────────────────────────── */
 .day-tabs {
   display: flex;
+  gap: 8px;
+  padding: 12px 16px;
   background: #fff;
   border-bottom: 1px solid #e5e5ea;
   overflow-x: auto;
@@ -54,19 +56,20 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .day-tab {
   flex: 1;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2px;
-  padding: 10px 8px;
-  border-bottom: 3px solid transparent;
-  color: #8e8e93;
-  transition: color 0.2s, border-color 0.2s;
-  min-width: 80px;
+  justify-content: center;
+  gap: 5px;
+  padding: 9px 12px;
+  border-radius: 22px;
+  background: #f2f2f7;
+  color: #636366;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 0.2s, color 0.2s, transform 0.15s;
+  white-space: nowrap;
 }
+.day-tab:active { transform: scale(0.95); }
 .day-tab.active { font-weight: 700; }
-
-.tab-day { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; }
-.tab-label { font-size: 0.75rem; }
 
 /* ─── Main ──────────────────────────────────────────────────── */
 .app-main { flex: 1; padding: 0 0 40px; }
@@ -467,7 +470,8 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
 .w-hist-empty { text-align: center; padding: 24px 16px; color: #8e8e93; font-size: 13px; line-height: 1.6; }
 
 /* ─── Tab done dot ───────────────────────────────────── */
-.tab-done-dot { width: 5px; height: 5px; border-radius: 50%; background: #00B894; margin: 2px auto 0; display: block; }
+.tab-done-dot { width: 6px; height: 6px; border-radius: 50%; background: #fff; opacity: 0.9; display: inline-block; flex-shrink: 0; }
+.day-tab:not(.active) .tab-done-dot { background: #00B894; opacity: 1; }
 
 /* ─── GIF loading / error states ────────────────────── */
 .gif-loading { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 28px; color: #8e8e93; font-size: 13px; }
