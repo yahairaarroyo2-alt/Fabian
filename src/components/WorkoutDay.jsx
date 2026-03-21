@@ -9,7 +9,13 @@ function formatTime(secs) {
 }
 
 export default function WorkoutDay({ workout }) {
-  const [checked, setChecked] = useState({});
+  const [checked, setChecked] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(`fba_checked_${workout.id}`) || "{}");
+    } catch {
+      return {};
+    }
+  });
   const [showTimer, setShowTimer] = useState(false);
   const [timerKey, setTimerKey] = useState(0);
   const [timerDuration, setTimerDuration] = useState(60);
@@ -32,6 +38,10 @@ export default function WorkoutDay({ workout }) {
   const [toast, setToast] = useState({ text: "", show: false });
   const weightInputRef = useRef(null);
   const toastTimerRef = useRef(null);
+
+  useEffect(() => {
+    localStorage.setItem(`fba_checked_${workout.id}`, JSON.stringify(checked));
+  }, [checked, workout.id]);
 
   useEffect(() => {
     localStorage.setItem(`fba_reps_${workout.id}`, JSON.stringify(repState));

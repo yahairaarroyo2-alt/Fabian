@@ -97,7 +97,7 @@ export default function RestTimer({
     setDuration(secs);
     setTimeLeft(secs);
     setRunning(false);
-    endTimeRef.current = null;
+    endTimeRef.current = Date.now() + secs * 1000;
   }
 
   function toggle() {
