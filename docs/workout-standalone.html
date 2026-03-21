@@ -452,7 +452,13 @@ function toggle(d, i) {
   renderDay(d);
   updateRing(d);
   renderTabs();
-  if (!wasAll && s.size === DAYS[d].exercises.length) setTimeout(showCeleb, 400);
+  if (!wasAll && s.size === DAYS[d].exercises.length) {
+    const day = DAYS[d];
+    setTimeout(() => showCeleb(
+      `${day.exercises.length} ejercicios · ${day.name}`,
+      `Completaste todos los ejercicios del ${day.name}. ¡Eres una crack! 🔥`
+    ), 400);
+  }
 }
 
 function switchDay(d) {
@@ -585,37 +591,60 @@ function sendNotif() {
 // ══════════════════════════════════════════════════════
 //  CELEBRATION
 // ══════════════════════════════════════════════════════
-function showCeleb() {
-  launchConfetti();
-  const day = DAYS[activeDay];
-  document.getElementById('celebStats').textContent =
-    `${day.exercises.length} ejercicios · ${day.name}`;
-  document.getElementById('celebMsg').textContent =
-    `Completaste todos los ejercicios del ${day.name}. ¡Eres una crack! 🔥`;
+let celebTimer = null;
+function showCeleb(statsText, msgText) {
+  document.getElementById('celebStats').textContent = statsText;
+  document.getElementById('celebMsg').textContent = msgText;
+  const em = document.querySelector('.celeb-em');
+  em.style.animation = 'none';
+  void em.offsetWidth;
+  em.style.animation = '';
   document.getElementById('celebOv').classList.add('show');
+  launchConfetti();
+  setTimeout(launchStars, 300);
+  const bar = document.getElementById('celebBar');
+  bar.style.transition = 'none';
+  bar.style.width = '100%';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    bar.style.transition = 'width 7s linear';
+    bar.style.width = '0%';
+  }));
+  clearTimeout(celebTimer);
+  celebTimer = setTimeout(closeCeleb, 7500);
 }
-function closeCeleb() { document.getElementById('celebOv').classList.remove('show'); }
-
+function closeCeleb() {
+  clearTimeout(celebTimer);
+  document.getElementById('celebOv').classList.remove('show');
+}
+function launchStars() {
+  const card = document.getElementById('celebCard');
+  card.querySelectorAll('.celeb-star').forEach(s => s.remove());
+  const emojis = ['⭐','✨','💫','🌟','💥','🎉','💖','🔥'];
+  for (let i = 0; i < 12; i++) {
+    const star = document.createElement('span');
+    star.className = 'celeb-star';
+    star.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    const angle = (i / 12) * 360;
+    const dist = 90 + Math.random() * 60;
+    const rad = angle * Math.PI / 180;
+    star.style.cssText = `left:50%;top:28%;font-size:${14+Math.random()*12}px;--sx:${Math.cos(rad)*dist}px;--sy:${Math.sin(rad)*dist}px;animation-delay:${Math.random()*.25}s;`;
+    card.appendChild(star);
+    setTimeout(() => star.remove(), 1300);
+  }
+}
 function launchConfetti() {
   const layer = document.getElementById('confetti');
   layer.innerHTML = '';
-  const cols = ['#e91e8c','#ff6b9d','#ffc107','#43a047','#2196f3','#9c27b0','#ff5722','#00bcd4'];
-  for (let i=0;i<90;i++) {
+  const cols = ['#e91e8c','#ff6b9d','#ffc107','#43a047','#2196f3','#9c27b0','#ff5722','#00bcd4','#fff176'];
+  for (let i = 0; i < 130; i++) {
     const el = document.createElement('div');
     el.className = 'cf';
-    const sz = 6+Math.random()*9;
-    el.style.cssText = `
-      left:${Math.random()*100}%;
-      width:${sz}px;
-      height:${Math.random()>.5?sz:sz*.5}px;
-      background:${cols[Math.floor(Math.random()*cols.length)]};
-      border-radius:${Math.random()>.5?'50%':'2px'};
-      animation-duration:${1.5+Math.random()*2.2}s;
-      animation-delay:${Math.random()*.9}s;
-      --dx:${-130+Math.random()*260}px;`;
+    const sz = 5 + Math.random() * 10;
+    const circ = Math.random() > .5;
+    el.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${circ?sz:sz*.45}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${circ?'50%':'2px'};animation-duration:${1.2+Math.random()*2.5}s;animation-delay:${Math.random()*.8}s;--dx:${-160+Math.random()*320}px;`;
     layer.appendChild(el);
   }
-  setTimeout(()=>layer.innerHTML='', 4800);
+  setTimeout(() => layer.innerHTML = '', 5200);
 }
 
 // ══════════════════════════════════════════════════════
