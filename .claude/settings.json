@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command' | grep -q 'gh pr create' && gh pr merge --auto --squash 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}
