@@ -4,7 +4,7 @@ export const workouts = [
   {
     id: 1,
     day: "Día 1",
-    label: "Upper A — Push",
+    label: "Superior A — Empuje",
     focus: "Pecho · Hombros · Tríceps",
     color: "#FF6B6B",
     exercises: [
@@ -19,7 +19,7 @@ export const workouts = [
   {
     id: 2,
     day: "Día 2",
-    label: "Lower A — Quad",
+    label: "Inferior A — Cuádriceps",
     focus: "Cuádriceps · Pantorrillas · Core",
     color: "#00B894",
     exercises: [
@@ -34,7 +34,7 @@ export const workouts = [
   {
     id: 3,
     day: "Día 3",
-    label: "Upper B — Pull",
+    label: "Superior B — Jalón",
     focus: "Espalda · Bíceps",
     color: "#A29BFE",
     exercises: [
@@ -49,7 +49,7 @@ export const workouts = [
   {
     id: 4,
     day: "Día 4",
-    label: "Lower B — Hip",
+    label: "Inferior B — Cadera",
     focus: "Isquios · Glúteos · Core",
     color: "#FDCB6E",
     exercises: [
