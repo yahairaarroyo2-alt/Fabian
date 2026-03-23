@@ -42,14 +42,6 @@ export default function App() {
       <header className="app-header">
         <h1 className="app-title">Fabian</h1>
         <p className="app-subtitle">Tu rutina personal · 4 días</p>
-        <a
-          className="yt-link"
-          href="https://youtube.com/watch?v=UCD7Hnx_THQ&si=uFimDF_CMwkl3qJW"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          ▶ Ver rutina en YouTube
-        </a>
       </header>
 
       <nav className="day-tabs">

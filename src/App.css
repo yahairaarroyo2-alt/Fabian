@@ -41,21 +41,6 @@ button { cursor: pointer; border: none; background: none; font-family: inherit; 
   margin-top: 2px;
 }
 
-.yt-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-top: 10px;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: #ff2d2d;
-  text-decoration: none;
-}
-
-.yt-link:hover {
-  text-decoration: underline;
-}
-
 /* ─── Day Tabs ──────────────────────────────────────────────── */
 .day-tabs {
   display: flex;
